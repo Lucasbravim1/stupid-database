@@ -1,3 +1,6 @@
+import tools as t
+
+
 def create_table(name, columns):
     keys = dict.fromkeys(columns, None)
     name = [keys]
@@ -56,12 +59,24 @@ def update(table, values, where=None):
     return table
 
 
+def delete(table, where=None):
+    if where is None:
+        table.clear()
+    else:
+        delete_rows = select(table, where)
+        for row in delete_rows:
+            if row in table:
+                table.remove(row)
+    # return [i for i in table if i not in select(table, where)]
+    return table
+
+
 if __name__ == '__main__':
     students = create_table("students", ["id", "name", "age", "house"])
     insert(students, {"name": "Lucas", "age": 22, "house": "Sonserina"})
     insert(students, {'name': 'gabi', 'age': 22, 'house': 'grifinoria'})
     insert(students, {'name': 'erico', 'age': 39, 'house': 'gsd'})
     insert(students, {'name': 'beth', 'age': 55, 'house': 'dasdsa'})
-    # print(update(students, {"name": "Harry"}, {"age": 22}))
-    print(select(students))
-
+    update(students, {"name": "Harry"}, {"age": 22})
+    delete(students, {'age': 55})
+    t.show_format(students)
