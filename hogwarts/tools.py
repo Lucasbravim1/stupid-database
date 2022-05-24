@@ -5,6 +5,7 @@ def show_format(table):
         print("{:<8}".format(key), end=" ")
         # print(key, end=" | ")
     print()
+    print('-' * 8 * len(keys))
     for i in range(0, len(table)):
         values = table[i].values()
         for value in values:
