@@ -62,11 +62,6 @@ if __name__ == '__main__':
     insert(students, {'name': 'gabi', 'age': 22, 'house': 'grifinoria'})
     insert(students, {'name': 'erico', 'age': 39, 'house': 'gsd'})
     insert(students, {'name': 'beth', 'age': 55, 'house': 'dasdsa'})
-    # print(students)
-    # print(select(students))
-    print(update(students, {"name": "Harry"}, {"age": 22}))
-    # insert(students, {'name': 'Lucasss', 'age': 22, 'house': 'Sonserina'})
-    # insert(students, {'name': 'gabi', 'age': 23, 'house': 'grifinoria'})
+    # print(update(students, {"name": "Harry"}, {"age": 22}))
+    print(select(students))
 
-# SELECT * FROM students
-# UPDATE STUDENTS SET NAME = HARRY WHERE ID = 2
