@@ -7,10 +7,10 @@ def create_table(name, columns):
     return name
 
 
-def insert(table, column_values):
+def insert(table, values):
     last_id = table[len(table) - 1]['id']
-    items = column_values.items()
-    keys = column_values.keys()
+    items = values.items()
+    keys = values.keys()
 
     if last_id is None:  # primeira linha
         table[0]['id'] = 1
@@ -30,7 +30,30 @@ def insert(table, column_values):
     return table
 
 
-def select(table, where=None):
+def select(columns, From):
+    formatted_columns = columns.replace(" ", "")
+
+    if formatted_columns == '*':
+        return From
+    elif formatted_columns == 'count':
+        return len(From)
+    else:
+        request_columns = formatted_columns.split(',')
+        result = []
+        for f in range(0, len(From)):
+            items = From[f].items()
+            for i in range(0, len(request_columns)):
+                for k, v in items:
+                    if request_columns[i] == k:
+                        if i == 0:
+                            result.append({k: v})
+                        else:
+                            result[f][k] = v
+
+    return result
+
+
+def From(table, where=None):  # verificar como colocar "from"
     if where is None:
         return table
     else:
@@ -43,14 +66,14 @@ def select(table, where=None):
         return result
 
 
-def update(table, values, where=None):
-    items = values.items()
+def update(table, set={}, where=None):
+    items = set.items()
     if where is None:
         for i in range(0, len(table)):
             for key, value in items:
                 table[i][key] = value
     else:
-        update_rows = select(table, where)
+        update_rows = select('*', From(table, where))
         id = update_rows[0]['id']
         for j in range(0, len(update_rows)):
             for key, value in items:
@@ -63,7 +86,7 @@ def delete(table, where=None):
     if where is None:
         table.clear()
     else:
-        delete_rows = select(table, where)
+        delete_rows = select('*', From(table, where))
         for row in delete_rows:
             if row in table:
                 table.remove(row)
@@ -71,12 +94,27 @@ def delete(table, where=None):
     return table
 
 
+# testes
 if __name__ == '__main__':
     students = create_table("students", ["id", "name", "age", "house"])
     insert(students, {"name": "Lucas", "age": 22, "house": "Sonserina"})
-    insert(students, {'name': 'gabi', 'age': 22, 'house': 'grifinoria'})
-    insert(students, {'name': 'erico', 'age': 39, 'house': 'gsd'})
-    insert(students, {'name': 'beth', 'age': 55, 'house': 'dasdsa'})
-    update(students, {"name": "Harry"}, {"age": 22})
-    delete(students, {'age': 55})
+    insert(students, {'name': 'Gabi', 'age': 22, 'house': 'Lufa-Lufa'})
+    insert(students, {'name': 'Erico', 'age': 41, 'house': 'Grifinória'})
+    insert(students, {'name': 'Beth', 'age': 65, 'house': 'Corvinal'})
     t.show_format(students)
+
+    update(students, set={'name': 'Bravim'}, where={'age': 65})
+    print()
+    t.show_format(students)
+
+    delete(students, where={'id': 3})
+    print()
+    t.show_format(students)
+
+    insert(students, values={'name': 'Rony', 'age': 7, 'house': 'Grifinória'})
+    print()
+    t.show_format(students)
+
+    query = select('name, house', From(students, where={'age': 22}))
+    print()
+    t.show_format(query)
